@@ -5,13 +5,12 @@ package javapropio
 
 import (
 	"bufio"
-	//	"bytes"
 	"code.google.com/p/go-charset/charset"
 	_ "code.google.com/p/go-charset/data"
 	"io"
 )
 
-const HEX = "0123456789ABCDEF"
+const unhex = "0123456789ABCDEF"
 
 type Writer struct {
 	w   io.WriteCloser
@@ -79,10 +78,10 @@ func escapeProp(buf *bufio.Writer, s string, isKey bool) {
 			buf.WriteRune('\\')
 			buf.WriteRune('u')
 
-			buf.WriteRune(rune(HEX[int32(r)>>12&0xF]))
-			buf.WriteRune(rune(HEX[int32(r)>>8&0xF]))
-			buf.WriteRune(rune(HEX[int32(r)>>4&0xF]))
-			buf.WriteRune(rune(HEX[int32(r)&0xF]))
+			buf.WriteRune(rune(unhex[int32(r)>>12&0xF]))
+			buf.WriteRune(rune(unhex[int32(r)>>8&0xF]))
+			buf.WriteRune(rune(unhex[int32(r)>>4&0xF]))
+			buf.WriteRune(rune(unhex[int32(r)&0xF]))
 		default:
 			buf.WriteRune(r)
 		}
