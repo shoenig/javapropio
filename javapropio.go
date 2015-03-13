@@ -32,7 +32,7 @@ func (pw *Writer) Close() error {
 func (pw *Writer) WriteProp(k, v string) error {
 	escapePropKey(pw.buf, k)
 	pw.buf.WriteRune('=')
-	escapePropKey(pw.buf, v)
+	escapePropValue(pw.buf, v)
 	pw.buf.WriteRune('\n')
 
 	return pw.buf.Flush()
