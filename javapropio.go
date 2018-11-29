@@ -5,9 +5,10 @@ package javapropio
 
 import (
 	"bufio"
-	"code.google.com/p/go-charset/charset"
-	_ "code.google.com/p/go-charset/data"
 	"io"
+
+	"github.com/rogpeppe/go-charset/charset"
+	_ "github.com/rogpeppe/go-charset/data"
 )
 
 const unhex = "0123456789ABCDEF"
