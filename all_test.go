@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestAll(t *testing.T) {
+func Test_All(t *testing.T) {
 	table := []struct {
 		key    string
 		val    string

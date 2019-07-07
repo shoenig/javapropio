@@ -11,7 +11,7 @@ import (
 	_ "github.com/rogpeppe/go-charset/data"
 )
 
-const unhex = "0123456789ABCDEF"
+const unHex = "0123456789ABCDEF"
 
 type Writer struct {
 	w   io.WriteCloser
@@ -32,9 +32,10 @@ func (pw *Writer) Close() error {
 
 func (pw *Writer) WriteProp(k, v string) error {
 	escapePropKey(pw.buf, k)
-	pw.buf.WriteRune('=')
+	write(pw.buf, '=')
+
 	escapePropValue(pw.buf, v)
-	pw.buf.WriteRune('\n')
+	write(pw.buf, '\n')
 
 	return pw.buf.Flush()
 }
@@ -42,49 +43,53 @@ func (pw *Writer) WriteProp(k, v string) error {
 func escapePropKey(buf *bufio.Writer, s string)   { escapeProp(buf, s, true) }
 func escapePropValue(buf *bufio.Writer, s string) { escapeProp(buf, s, false) }
 
-func escapeProp(buf *bufio.Writer, s string, isKey bool) {
+func escapeProp(w *bufio.Writer, s string, isKey bool) {
 	for x, r := range s {
 		if r > 61 && r < 127 {
 			if r == '\\' {
-				buf.WriteRune('\\')
-				buf.WriteRune('\\')
+				write(w, '\\')
+				write(w, '\\')
 				continue
 			}
-			buf.WriteRune(r)
+			write(w, r)
 			continue
 		}
 
 		switch {
 		case r == ' ':
 			if x == 0 || isKey {
-				buf.WriteRune('\\')
+				write(w, '\\')
 			}
-			buf.WriteRune(' ')
+			write(w, ' ')
 		case r == '\t':
-			buf.WriteRune('\\')
-			buf.WriteRune('t')
+			write(w, '\\')
+			write(w, 't')
 		case r == '\n':
-			buf.WriteRune('\\')
-			buf.WriteRune('n')
+			write(w, '\\')
+			write(w, 'n')
 		case r == '\r':
-			buf.WriteRune('\\')
-			buf.WriteRune('r')
+			write(w, '\\')
+			write(w, 'r')
 		case r == '\f':
-			buf.WriteRune('\\')
-			buf.WriteRune('f')
+			write(w, '\\')
+			write(w, 'f')
 		case r == '=', r == ':', r == '#', r == '!':
-			buf.WriteRune('\\')
-			buf.WriteRune(r)
+			write(w, '\\')
+			write(w, r)
 		case int32(r) < 0x20, int32(r) > 0x7e:
-			buf.WriteRune('\\')
-			buf.WriteRune('u')
+			write(w, '\\')
+			write(w, 'u')
 
-			buf.WriteRune(rune(unhex[int32(r)>>12&0xF]))
-			buf.WriteRune(rune(unhex[int32(r)>>8&0xF]))
-			buf.WriteRune(rune(unhex[int32(r)>>4&0xF]))
-			buf.WriteRune(rune(unhex[int32(r)&0xF]))
+			write(w, rune(unHex[int32(r)>>12&0xF]))
+			write(w, rune(unHex[int32(r)>>8&0xF]))
+			write(w, rune(unHex[int32(r)>>4&0xF]))
+			write(w, rune(unHex[int32(r)&0xF]))
 		default:
-			buf.WriteRune(r)
+			write(w, r)
 		}
 	}
+}
+
+func write(w *bufio.Writer, r rune) {
+	_, _ = w.WriteRune(r)
 }
