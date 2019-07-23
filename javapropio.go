@@ -1,7 +1,7 @@
 // Copyright (c) 2013 - Richard Boyer. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can
 // be found in the LICENSE file.
-package javapropio
+package javapropio // import "gophers.dev/pkgs/javapropio"
 
 import (
 	"bufio"
